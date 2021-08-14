@@ -8,6 +8,7 @@ import co.mz.osoma.editor.service.TreeItemController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.BorderPane;
@@ -22,10 +23,13 @@ import java.util.ResourceBundle;
 public class MainGUIController implements Initializable {
 
     @FXML
-    private TreeView<Object> treeCon;
+    public TreeView<Object> treeCon;
 
     @FXML
     public BorderPane mainBoder;
+
+    @FXML
+    public ProgressBar progBar;
 
 
     private MainApp mainApp;
@@ -87,18 +91,19 @@ public class MainGUIController implements Initializable {
                 TreeItem<Object> item = (TreeItem<Object>) obj;
 
                 PaneFactory paneFactory = new PaneFactory(item.getValue(),this);
-                Pane page = paneFactory.create();
+                Pane pane = paneFactory.create();
 
                 TreeItemController treeItemController = paneFactory.getLoader().getController();
                 treeItemController.fillForm(item.getValue());
 
-                this.mainBoder.setCenter(page);
+                this.mainBoder.setCenter(pane);
             } catch (IOException e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setContentText(e.getMessage());
                 alert.show();
             }catch (Exception ex) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
+                ex.printStackTrace();
                 alert.setContentText(ex.getMessage());
                 alert.show();
             }
@@ -107,7 +112,8 @@ public class MainGUIController implements Initializable {
 
     }
 
-    public void populateTree(RootObject node) {
+//    public void populateTree(RootObject node) {
+    public void populateTree(RootCorpus node) {
         try {
 
             if(node != null) {
@@ -132,6 +138,7 @@ public class MainGUIController implements Initializable {
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
     }
+    public MainApp getMainApp(){return this.mainApp;}
 
     public TreeItem<Object> getRootNode(){ return treeCon.getRoot().getChildren().get(0);}
 

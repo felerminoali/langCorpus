@@ -1,12 +1,15 @@
 package co.mz.osoma.editor;
 
-import co.mz.osoma.editor.controlador.RootLayoutController;
+import co.mz.osoma.editor.controlador.*;
+import co.mz.osoma.editor.service.AutoSpellingTextArea;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
-import co.mz.osoma.editor.controlador.MainGUIController;
 
 import java.io.IOException;
 
@@ -78,6 +81,71 @@ public class MainApp extends Application {
         }
     }
 
+    public void showSpellCheck(AutoSpellingTextArea ta){
+
+        try {
+            // Load person overview.
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainApp.class.getResource("vista/SpellCheck.fxml"));
+            AnchorPane anchorPane = (AnchorPane) loader.load();
+
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Spelling Check");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(primaryStage);
+            Scene scene = new Scene(anchorPane);
+            dialogStage.setScene(scene);
+
+            // Set reference to stage in controller
+            SpellCheckController controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+
+            // give controller reference to text area to load file into
+            controller.setTextArea(ta);
+
+            // Show the dialog and wait until the user closes it
+            dialogStage.showAndWait();
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    public void showLoadFileDialog(MainGUIController mainGUIController) {
+        try {
+            // Load the fxml file and create a new stage for the popup
+            FXMLLoader loader = new FXMLLoader(MainAppi.class.getResource("vista/LoadDataLayout.fxml"));
+            VBox page = (VBox) loader.load();
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Load File");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(primaryStage);
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+
+            // Set reference to stage in controller
+            LoadDataFileController controller = loader.getController();
+            controller.setMainGUIController(mainGUIController);
+            controller.setDialogStage(dialogStage);
+
+            // give controller reference to text area to load file into
+//            controller.setTextArea(ta);
+
+            // Show the dialog and wait until the user closes it
+            dialogStage.showAndWait();
+
+
+
+
+        } catch (IOException e) {
+            // Exception gets thrown if the fxml file could not be loaded
+            e.printStackTrace();
+        }
+
+    }
     public static void main(String[] args) {
         launch(args);
     }

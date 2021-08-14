@@ -86,7 +86,7 @@ public class AddQuestionController implements Initializable, TreeItemController 
 
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        scrollPane.setPrefHeight(600);
+//        scrollPane.setPrefHeight(600);
         scrollPane.setContent(pane);
 
         tabQA.setContent(scrollPane);

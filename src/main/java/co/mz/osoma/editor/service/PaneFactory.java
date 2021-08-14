@@ -1,13 +1,10 @@
 package co.mz.osoma.editor.service;
 
 import co.mz.osoma.editor.controlador.MainGUIController;
+import co.mz.osoma.editor.modelo.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
 import co.mz.osoma.editor.MainApp;
-import co.mz.osoma.editor.modelo.Choice;
-import co.mz.osoma.editor.modelo.Exam;
-import co.mz.osoma.editor.modelo.Question;
-import co.mz.osoma.editor.modelo.RootObject;
 
 import java.io.IOException;
 
@@ -26,7 +23,7 @@ public class PaneFactory {
 
         loader = new FXMLLoader();
 
-        if(object instanceof RootObject){
+        if(object instanceof RootCorpus){
             try {
                 loader.setLocation(MainApp.class.getResource("vista/RootPane.fxml"));
             }catch (Exception e){
@@ -34,17 +31,43 @@ public class PaneFactory {
             }
         }
 
-        if(object instanceof Exam){
+//        if(object instanceof RootObject){
+//            try {
+//                loader.setLocation(MainApp.class.getResource("vista/RootPane.fxml"));
+//            }catch (Exception e){
+//                e.printStackTrace();
+//            }
+//        }
+
+        if(object instanceof SubCorpus){
             try {
-                loader.setLocation(MainApp.class.getResource("vista/ExamPane.fxml"));
+                loader.setLocation(MainApp.class.getResource("vista/SubCorpusPane.fxml"));
             }catch (Exception e){
                 e.printStackTrace();
             }
         }
 
+//        if(object instanceof Exam){
+//            try {
+//                loader.setLocation(MainApp.class.getResource("vista/ExamPane.fxml"));
+//            }catch (Exception e){
+//                e.printStackTrace();
+//            }
+//        }
+
         if(object instanceof Question){
             try {
                 loader.setLocation(MainApp.class.getResource("vista/AddQuestion.fxml"));
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }
+
+
+        if(object instanceof Line){
+            try {
+                loader.setLocation(MainApp.class.getResource("vista/AddLine.fxml"));
             }catch (Exception e){
                 e.printStackTrace();
             }

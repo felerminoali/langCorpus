@@ -1,10 +1,9 @@
 package co.mz.osoma.editor.controlador;
 
-import co.mz.osoma.editor.modelo.Exam;
-import co.mz.osoma.editor.modelo.QuestionMultiChoice;
-import co.mz.osoma.editor.modelo.RootObject;
+import co.mz.osoma.editor.modelo.*;
 import co.mz.osoma.editor.service.CustomRootObjectDeserializer;
 import co.mz.osoma.editor.service.Helper;
+import co.mz.osoma.editor.service.ReadFileTask;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,6 +32,8 @@ public class RootLayoutController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+
+
     }
 
 
@@ -45,42 +46,35 @@ public class RootLayoutController implements Initializable {
     }
 
 
+
     @FXML
     public void handleOpen() {
 
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open File");
-        File file = fileChooser.showOpenDialog(this.primaryStage);
+        mainGUIController.getMainApp().showLoadFileDialog(mainGUIController);
 
-        if (file != null) {
-
-            if (!mainGUIController.isRootEmpty()) {
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Open New File");
-                alert.setContentText("Are you sure you want to close current exam file and open another one?");
-                ButtonType okButton = new ButtonType("Yes", ButtonBar.ButtonData.YES);
-                ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.NO);
-                ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
-                alert.getButtonTypes().setAll(okButton, noButton, cancelButton);
-                alert.showAndWait().ifPresent(type -> {
-                    if (type.getText().equals(ButtonType.YES.getText())) {
-
-                        try {
-                            ObjectMapper mapper = new ObjectMapper();
-                            SimpleModule module = new SimpleModule("CustomRootObjectDeserializer", new Version(1, 0, 0, null, null, null));
-                            module.addDeserializer(RootObject.class, new CustomRootObjectDeserializer());
-                            mapper.registerModule(module);
-                            RootObject rootObject = mapper.readValue(file, RootObject.class);
-                            mainGUIController.populateTree(rootObject);
-                        } catch (IOException ex) {
-                            Alert error = new Alert(Alert.AlertType.ERROR);
-                            error.setContentText(ex.getMessage());
-                            error.show();
-                        }
-                    }
-                });
-            }
-        }
+//        FileChooser fileChooser = new FileChooser();
+//        fileChooser.setTitle("Open File");
+//        File file = fileChooser.showOpenDialog(this.primaryStage);
+//
+//        if (file != null) {
+//
+//            if (!mainGUIController.isRootEmpty()) {
+//                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+//                alert.setTitle("Open New File");
+//                alert.setContentText("Are you sure you want to close current exam file and open another one?");
+//                ButtonType okButton = new ButtonType("Yes", ButtonBar.ButtonData.YES);
+//                ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.NO);
+//                ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+//                alert.getButtonTypes().setAll(okButton, noButton, cancelButton);
+//                alert.showAndWait().ifPresent(type -> {
+//                    if (type.getText().equals(ButtonType.YES.getText())) {
+//                        readFile(file);
+//                    }
+//                });
+//            }else{
+//                readFile(file);
+//            }
+//        }
 
     }
 
@@ -113,18 +107,22 @@ public class RootLayoutController implements Initializable {
 
     }
 
-    public RootObject createNewCollection() {
+    public RootCorpus createNewCollection() {
 
         Helper.resetTotals();
 
-        ObservableList<Exam> exams = FXCollections.observableArrayList();
-        Exam exam = new Exam();
-        exams.add(exam);
+//        ObservableList<Exam> exams = FXCollections.observableArrayList();
+//        Exam exam = new Exam();
+//            exams.add(exam);
+//        RootObject rootObject = new RootObject(exams);
+//        mainGUIController.populateTree(rootObject);
+//        return rootObject;
 
-        RootObject rootObject = new RootObject(exams);
-
+        ObservableList<SubCorpus> subCorpuses = FXCollections.observableArrayList();
+        SubCorpus corpus = new SubCorpus();
+        subCorpuses.add(corpus);
+        RootCorpus rootObject = new RootCorpus(subCorpuses);
         mainGUIController.populateTree(rootObject);
-
         return rootObject;
 
     }

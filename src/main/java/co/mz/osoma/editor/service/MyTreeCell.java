@@ -18,7 +18,9 @@ import co.mz.osoma.editor.controlador.MainGUIController;
  */
 public class MyTreeCell extends TextFieldTreeCell<Object> {
 
-    private ContextMenu questionMenu, examMenu, choiceMenu;
+    private ContextMenu questionMenu, examMenu, choiceMenu, collectionMenu;
+    private ContextMenu corpusMenu;
+
     private MainGUIController controller;
 
     public MyTreeCell(MainGUIController mainGUIController) {
@@ -79,6 +81,38 @@ public class MyTreeCell extends TextFieldTreeCell<Object> {
                 )
                 .build();
 
+        corpusMenu  = ContextMenuBuilder.create()
+                .items(
+                        MenuItemBuilder.create()
+                                .text("Add Line")
+                                .onAction(
+                                        new EventHandler<ActionEvent>() {
+                                            @Override
+                                            public void handle(ActionEvent arg0) {
+
+                                                try {
+
+
+                                                    QuestionMultiChoice questionMultiChoice = new QuestionMultiChoice();
+                                                    Line line = new Line();
+                                                    questionMultiChoice.setQtype(QuestionType.SIGLE);
+                                                    ((SubCorpus)mainGUIController.getSeletedItem().getValue()).getLines().add(line);
+
+                                                    TreeItem<Object> node = mainGUIController.makeBranch(line, mainGUIController.getSeletedItem());
+
+                                                    int row = mainGUIController.treeCon.getRow(node);
+                                                    mainGUIController.treeCon.getSelectionModel().select(row);
+
+                                                }catch (Exception e){
+
+                                                }
+                                            }
+                                        }
+                                )
+                                .build()
+                )
+                .build();
+
         choiceMenu = ContextMenuBuilder.create()
                 .items(
                         MenuItemBuilder.create()
@@ -124,8 +158,43 @@ public class MyTreeCell extends TextFieldTreeCell<Object> {
                 )
                 .build();
 
-        questionMenu
-                = ContextMenuBuilder.create()
+        collectionMenu = ContextMenuBuilder.create()
+                .items(
+                        MenuItemBuilder.create()
+                                .text("Add Exam")
+                                .onAction(
+                                        new EventHandler<ActionEvent>() {
+                                            @Override
+                                            public void handle(ActionEvent arg0) {
+                                                Helper.totalExams = ((RootObject)mainGUIController.getSeletedItem().getValue()).getExams().size()-1;
+
+//                                                System.out.println(Helper.totalExams);
+                                                Exam exam = new Exam();
+                                                ((RootObject)mainGUIController.getSeletedItem().getValue()).getExams().add(exam);
+                                                mainGUIController.makeBranch(new Exam(), mainGUIController.getSeletedItem());
+                                            }
+                                        }
+                                )
+                                .build(),
+
+                        MenuItemBuilder.create()
+                                .text("Delete")
+                                .onAction(
+                                        new EventHandler<ActionEvent>() {
+                                            @Override
+                                            public void handle(ActionEvent arg0) {
+                                            }
+                                        }
+                                )
+                                .disable(true)
+                                .build()
+                        // other menu item
+
+
+                )
+                .build();
+
+        questionMenu = ContextMenuBuilder.create()
                 .items(
                         MenuItemBuilder.create()
                                 .text("Add Choice")
@@ -206,8 +275,18 @@ public class MyTreeCell extends TextFieldTreeCell<Object> {
 //            return;
 //        }
 
+        if(!empty && item instanceof RootObject){
+            setContextMenu(collectionMenu);
+            return;
+        }
+
         if(!empty && item instanceof Exam){
             setContextMenu(examMenu);
+            return;
+        }
+
+        if(!empty && item instanceof SubCorpus){
+            setContextMenu(corpusMenu);
             return;
         }
 

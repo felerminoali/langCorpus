@@ -10,12 +10,16 @@ public class Helper {
     public static int totalQuestions = 0;
     public static int totalChoices = 0;
 
+    public static int totalCorpus = 0;
+    public static int totalLines = 0;
 
     public static void resetTotals(){
         Helper.totalExams = 0;
         Helper.totalQuestions = 0;
         Helper.totalChoices = 0;
 
+        totalCorpus = 0;
+        totalLines = 0;
     }
 
     public static ObservableList<University> getUniverstiUniversities(){
