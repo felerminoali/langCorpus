@@ -1,5 +1,6 @@
 package co.mz.osoma.editor.controlador;
 
+import co.mz.osoma.editor.modelo.RootCorpus;
 import co.mz.osoma.editor.service.TreeItemController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -13,36 +14,32 @@ import java.util.ResourceBundle;
 public class RootPaneController implements Initializable, TreeItemController {
 
     private MainGUIController mainGUIController;
-    private RootObject rootObject;
+    private RootCorpus rootObject;
 
     @FXML
-    private TextField txtTitle, txtNumber, txtFileVer, txtPassScore, txtTimeLimite;
+    private TextField txtTitle, txtFileVer;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
 
         txtTitle.textProperty().addListener((observable, oldValue, newValue) -> {
-            RootObject selectedObject = getSelectedItemObject();
-            selectedObject.titleProperty().set(newValue);
+            RootCorpus selectedObject = getSelectedItemObject();
+            selectedObject.getAuthor().set(newValue);
         });
 
-        txtNumber.textProperty().addListener((observable, oldValue, newValue) -> {
-            RootObject selectedObject = getSelectedItemObject();
-            selectedObject.numberProperty().set(newValue);
-        });
 
         txtFileVer.textProperty().addListener((observable, oldValue, newValue) -> {
-            RootObject selectedObject = getSelectedItemObject();
+            RootCorpus selectedObject = getSelectedItemObject();
             selectedObject.fileVersionProperty().set(newValue);
         });
 
 
     }
 
-    public RootObject getSelectedItemObject(){
+    public RootCorpus getSelectedItemObject(){
         TreeItem<Object> selectedItem = mainGUIController.getSeletedItem();
-        return (RootObject) selectedItem.getValue();
+        return (RootCorpus) selectedItem.getValue();
     }
     public void setMainGUIController(MainGUIController mainGUIController){
         this.mainGUIController = mainGUIController;
@@ -50,10 +47,8 @@ public class RootPaneController implements Initializable, TreeItemController {
 
     public void fillForm(Object root){
         try {
-            RootObject rootObject = (RootObject) root;
+            RootCorpus rootObject = (RootCorpus) root;
 
-            txtTitle.setText(rootObject.getTitle());
-            txtNumber.setText(rootObject.getNumber());
             txtFileVer.setText(rootObject.getFileVersion());
 
         }catch (Exception ex){

@@ -13,6 +13,8 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.input.InputEvent;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -82,6 +84,15 @@ public class AddLineController implements Initializable, TreeItemController {
             }
         });
 
+        taOriginSentence.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent ke) {
+                if (ke.getCode().equals(KeyCode.ENTER)) {
+                    // chatTextArea.positionCaret(0); // not necessary
+                    ke.consume(); // necessary to prevent event handlers for this event
+                }
+            }
+        });
         taOriginSentence.setSpelling(true);
         taOriginSentence.setAutoComplete(true);
 
@@ -117,6 +128,16 @@ public class AddLineController implements Initializable, TreeItemController {
                 Line selectedItemObject = getSelectedItemObject();
 //                selectedItemObject.targetSentenceProperty().set(taTargetSentence.getHtmlText());
                 selectedItemObject.targetSentenceProperty().set(taTargetSentence.getText());
+            }
+        });
+
+        taTargetSentence.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent ke) {
+                if (ke.getCode().equals(KeyCode.ENTER)) {
+                    // chatTextArea.positionCaret(0); // not necessary
+                    ke.consume(); // necessary to prevent event handlers for this event
+                }
             }
         });
 

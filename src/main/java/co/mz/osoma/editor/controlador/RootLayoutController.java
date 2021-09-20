@@ -1,6 +1,7 @@
 package co.mz.osoma.editor.controlador;
 
 import co.mz.osoma.editor.modelo.*;
+import co.mz.osoma.editor.service.Cancelable;
 import co.mz.osoma.editor.service.CustomRootObjectDeserializer;
 import co.mz.osoma.editor.service.Helper;
 import co.mz.osoma.editor.service.ReadFileTask;
@@ -8,20 +9,26 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
+import javafx.scene.control.*;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.ResourceBundle;
 
 public class RootLayoutController implements Initializable {
@@ -29,13 +36,14 @@ public class RootLayoutController implements Initializable {
     Stage primaryStage;
     MainGUIController mainGUIController;
 
+    @FXML
+    Button btnSave;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
-
-
+//        BooleanBinding treeEmpty = Bindings.createBooleanBinding(() -> mainGUIController != null && mainGUIController.getRootNode() != null  && ((RootCorpus)mainGUIController.getRootNode().getValue()).getSubCorpuses().size()<1);
+//        btnSave.disableProperty().bind(treeEmpty.not());
     }
-
 
     public void setMainGUIController(MainGUIController mainGUIController) {
         this.mainGUIController = mainGUIController;
@@ -80,43 +88,32 @@ public class RootLayoutController implements Initializable {
 
     @FXML
     public void handleSave() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save File");
-        File file = fileChooser.showSaveDialog(this.primaryStage);
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        File selectedDirectory = directoryChooser.showDialog(primaryStage);
 
 
-        if (file != null) {
-            try {
-                ObjectMapper objectMapper = new ObjectMapper();
-                RootObject rootObject = (RootObject) mainGUIController.getRootNode().getValue();
-                objectMapper.writeValue(file, rootObject);
-            } catch (JsonProcessingException ex) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setContentText(ex.getMessage());
-                alert.show();
-            } catch (IOException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setContentText(e.getMessage());
-                alert.show();
-            } finally {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setContentText(file.getName() + " successfully created");
-                alert.show();
+        if (selectedDirectory !=null){
+            RootCorpus corpus = (RootCorpus) mainGUIController.getRootNode().getValue();
+            System.out.println(corpus);
+            if(corpus != null){
+                BindTask task = new BindTask(corpus, selectedDirectory);
+                mainGUIController.progBar.progressProperty().bind(task.progressProperty());
+                new Thread(task).start();
+
+                if(task.getMessage() == "Successful"){
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setContentText("File has been succefully saved");
+                    alert.show();
+                }else {
+
+                }
             }
         }
-
     }
 
     public RootCorpus createNewCollection() {
 
         Helper.resetTotals();
-
-//        ObservableList<Exam> exams = FXCollections.observableArrayList();
-//        Exam exam = new Exam();
-//            exams.add(exam);
-//        RootObject rootObject = new RootObject(exams);
-//        mainGUIController.populateTree(rootObject);
-//        return rootObject;
 
         ObservableList<SubCorpus> subCorpuses = FXCollections.observableArrayList();
         SubCorpus corpus = new SubCorpus();
@@ -150,4 +147,64 @@ public class RootLayoutController implements Initializable {
         }
 
     }
+
+
+    public class BindTask extends Task<Object> implements Cancelable {
+
+        RootCorpus corpus;
+        File dir;
+
+        public BindTask(RootCorpus corpus, File dir){
+            this.corpus = corpus;
+            this.dir = dir;
+        }
+        @Override
+        protected Object call() throws Exception {
+            try {
+                FileWriter fileOrigin = new FileWriter(dir.getAbsolutePath()+"/origin-"+new SimpleDateFormat("yyyy-mm-dd-hh-mm-ss").format(Calendar.getInstance().getTime()));
+                FileWriter fileTarget = new FileWriter(dir.getAbsolutePath()+"/target-"+new SimpleDateFormat("yyyy-mm-dd-hh-mm-ss").format(Calendar.getInstance().getTime()));
+
+                for (SubCorpus subCorpus:corpus.getSubCorpuses()) {
+                    for (Line line: subCorpus.getLines()){
+                        fileOrigin.write(line.getOriginSentence()+"\n");
+                        fileTarget.write(line.getTargetSentence()+"\n");
+                    }
+                }
+                fileOrigin.close();
+                fileTarget.close();
+
+                updateProgress(-1.0, 100);
+                updateMessage("Successful");
+                updateValue("");
+                updateProgress(0, 100);
+            } catch (IOException e) {
+                updateMessage("Error");
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText(e.getMessage());
+                alert.show();
+                e.printStackTrace();
+            }
+            catch (Exception ex) {
+
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+                updateMessage("Error");
+            alert.setContentText(ex.getMessage());
+
+            alert.show();
+            ex.printStackTrace();
+        }
+
+            return "";
+        }
+
+
+        @Override
+        public void cancelProgress() {
+            updateMessage("Process cancelled!");
+            updateProgress(0, 100);
+            cancel(true);
+        }
+    }
+
+
 }

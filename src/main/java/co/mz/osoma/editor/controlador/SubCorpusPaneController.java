@@ -4,6 +4,7 @@ import co.mz.osoma.editor.modelo.Line;
 import co.mz.osoma.editor.modelo.SubCorpus;
 import co.mz.osoma.editor.service.Cancelable;
 import co.mz.osoma.editor.service.TreeItemController;
+import com.sun.javafx.scene.control.skin.VirtualFlow;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
@@ -41,7 +42,7 @@ public class SubCorpusPaneController implements Initializable, TreeItemControlle
     @FXML
     private TableColumn<Line, String> lang_origin, lang_dest, line_number;
 
-
+    private String txt = "";
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -58,26 +59,9 @@ public class SubCorpusPaneController implements Initializable, TreeItemControlle
             if (cellData.getValue().originSentenceProperty().isEmpty().get()) return cellData.getValue().originSentenceProperty();
             StringProperty s = new SimpleStringProperty();
             s.set(cellData.getValue().originSentenceProperty().get());
-            codeOrigin.appendText(((SimpleStringProperty) s).get()+"\n");
+                codeOrigin.appendText(((SimpleStringProperty) s).get()+"\n");
             return s;
         });
-
-        ContextMenu cm = new ContextMenu();
-        MenuItem mi1 = new MenuItem("Menu 1");
-        cm.getItems().add(mi1);
-        MenuItem mi2 = new MenuItem("Menu 2");
-        cm.getItems().add(mi2);
-
-        tblLines.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-
-            @Override
-            public void handle(MouseEvent t) {
-                if(t.getButton() == MouseButton.SECONDARY) {
-                    cm.show(tblLines, t.getScreenX(), t.getScreenY());
-                }
-            }
-        });
-
 
         tblLines.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
@@ -89,6 +73,7 @@ public class SubCorpusPaneController implements Initializable, TreeItemControlle
                     if(node!=null){
                         int row = mainGUIController.treeCon.getRow(node);
                         mainGUIController.treeCon.getSelectionModel().select(row);
+                        mainGUIController.treeCon.scrollTo(row);
                     }
                 }
             }
@@ -198,26 +183,7 @@ public class SubCorpusPaneController implements Initializable, TreeItemControlle
         }
     }
 
-    // TODO: 8/14/2021 try to optimize using binary search
-    private TreeItem<Object> findTreeItem(TreeItem<Object> root, Line search){
-
-        System.out.println("okela");
-        if (root.getChildren() == null) return null;
-
-        for (TreeItem<Object> item :root.getChildren()) {
-            System.out.println(item);
-            if((item.getValue() instanceof Line)){
-                if(((Line) item.getValue()).equals(search)){
-                    System.out.println("entrei"+item);
-                    return item;
-                }
-            }
-            findTreeItem(item, search);
-        }
-        return null;
-    }
-
-    public static TreeItem<Object> getTreeViewItem(TreeItem<Object> item , Line value)
+    private TreeItem<Object> getTreeViewItem(TreeItem<Object> item , Line value)
     {
         if (item != null && item.getValue().equals(value))
             return  item;

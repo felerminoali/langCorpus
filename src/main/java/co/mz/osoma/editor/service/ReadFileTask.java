@@ -38,7 +38,7 @@ public class ReadFileTask extends Task<Object> implements Cancelable {
         try {
 
             ObservableList<Line> lines = FXCollections.observableArrayList();
-
+            Helper.resetTotals();
             for (int i = 0; i < fileOrigin.size(); i++) {
                 Line line = new Line();
                 line.setOriginSentence(fileOrigin.get(i));
@@ -50,7 +50,11 @@ public class ReadFileTask extends Task<Object> implements Cancelable {
 
             ObservableList<SubCorpus> corpuses = FXCollections.observableArrayList();
 
-            rootCorpus = new RootCorpus(corpuses);
+            corpuses.add(subCorpus);
+//            RootCorpus rootCorpus = new RootCorpus(corpuses);
+//            mainGUIController.populateTree(rootCorpus);
+//
+//            rootCorpus = new RootCorpus(corpuses);
 
             updateProgress(-1.0, 100);
             updateMessage("Successful");

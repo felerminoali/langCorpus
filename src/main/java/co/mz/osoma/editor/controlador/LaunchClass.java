@@ -6,12 +6,17 @@ import co.mz.osoma.editor.spelling.*;
 import co.mz.osoma.editor.textgen.MarkovTextGenerator;
 import co.mz.osoma.editor.textgen.MarkovTextGeneratorLoL;
 
+import java.io.File;
+import java.io.InputStream;
 import java.util.Random;
 
 
 public class LaunchClass {
 
-    public String dictFile = "C:\\Users\\user\\IdeaProjects\\LangCorpus\\src\\main\\resources\\data\\dict.txt";
+    public String dictFile =  getClass().getResource("/data/dict-vmw").getPath();
+
+    public InputStream dict = getClass().getResourceAsStream("/data/dict-vmw");
+//    public String dictFile =  "C:\\Users\\user\\IdeaProjects\\LangCorpus\\src\\main\\resources\\co\\mz\\osoma\\editor\\data\\dict-vmw";
 
     public LaunchClass() {
         super();
@@ -32,13 +37,15 @@ public class LaunchClass {
 
     public AutoComplete getAutoComplete() {
         AutoCompleteDictionaryTrie tr = new AutoCompleteDictionaryTrie();
-        DictionaryLoader.loadDictionary(tr, dictFile);
+//        DictionaryLoader.loadDictionary(tr, dictFile);
+        DictionaryLoader.loadDictionary(tr, dict);
         return tr;
     }
 
     public Dictionary getDictionary() {
         Dictionary d = new DictionaryBST();
-        DictionaryLoader.loadDictionary(d, dictFile);
+//        DictionaryLoader.loadDictionary(d, dictFile);
+        DictionaryLoader.loadDictionary(d, dict);
         return d;
     }
 

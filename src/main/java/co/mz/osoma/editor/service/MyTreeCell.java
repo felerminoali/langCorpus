@@ -18,8 +18,7 @@ import co.mz.osoma.editor.controlador.MainGUIController;
  */
 public class MyTreeCell extends TextFieldTreeCell<Object> {
 
-    private ContextMenu questionMenu, examMenu, choiceMenu, collectionMenu;
-    private ContextMenu corpusMenu;
+    private ContextMenu corpusMenu, lineMenu;
 
     private MainGUIController controller;
 
@@ -27,59 +26,7 @@ public class MyTreeCell extends TextFieldTreeCell<Object> {
 
         this.controller = mainGUIController;
 
-        MenuItem menu1 = MenuItemBuilder.create().text("Multi Choice (Single Select)").onAction(
-                new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent arg0) {
-                        try {
 
-
-                            QuestionMultiChoice questionMultiChoice = new QuestionMultiChoice();
-                            questionMultiChoice.setQtype(QuestionType.SIGLE);
-                            ((Exam)mainGUIController.getSeletedItem().getValue()).getQuestions().add(questionMultiChoice);
-
-                            TreeItem<Object> node = mainGUIController.makeBranch(questionMultiChoice, mainGUIController.getSeletedItem());
-
-                            Helper.totalChoices = 0;
-
-                            for (int i = 0; i<questionMultiChoice.getTotalOfChoices(); i++){
-                                Choice choice = new Choice();
-                                questionMultiChoice.getChoices().add(choice);
-                                mainGUIController.makeBranch(choice, node);
-                            }
-
-                        }catch (Exception e){
-
-                        }
-                    }
-                }
-        ).build();
-        MenuItem menu2 = MenuItemBuilder.create().text("Multi Choice (Multiple Select)").build();
-        MenuItem menu3 = MenuItemBuilder.create().text("Multi Choice (Single Select) With Case of Study").onAction(
-                new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent arg0) {
-
-                    }
-                }
-        ).build();
-        MenuItem menu4 = MenuItemBuilder.create().text("Multi Choice (Multiple Select) With Case of Study").build();
-        examMenu
-                = ContextMenuBuilder.create()
-                .items(
-                        MenuBuilder.create().text("New Question").items(menu1, menu2, menu3, menu4).build(),
-                        MenuItemBuilder.create()
-                                .text("Delete")
-                                .onAction(
-                                        new EventHandler<ActionEvent>() {
-                                            @Override
-                                            public void handle(ActionEvent arg0) {
-                                            }
-                                        }
-                                ).disable(true)
-                                .build()
-                )
-                .build();
 
         corpusMenu  = ContextMenuBuilder.create()
                 .items(
@@ -91,17 +38,12 @@ public class MyTreeCell extends TextFieldTreeCell<Object> {
                                             public void handle(ActionEvent arg0) {
 
                                                 try {
-
-
-                                                    QuestionMultiChoice questionMultiChoice = new QuestionMultiChoice();
                                                     Line line = new Line();
-                                                    questionMultiChoice.setQtype(QuestionType.SIGLE);
                                                     ((SubCorpus)mainGUIController.getSeletedItem().getValue()).getLines().add(line);
-
                                                     TreeItem<Object> node = mainGUIController.makeBranch(line, mainGUIController.getSeletedItem());
-
                                                     int row = mainGUIController.treeCon.getRow(node);
                                                     mainGUIController.treeCon.getSelectionModel().select(row);
+                                                    mainGUIController.treeCon.scrollTo(row);
 
                                                 }catch (Exception e){
 
@@ -113,137 +55,8 @@ public class MyTreeCell extends TextFieldTreeCell<Object> {
                 )
                 .build();
 
-        choiceMenu = ContextMenuBuilder.create()
+        lineMenu = ContextMenuBuilder.create()
                 .items(
-                        MenuItemBuilder.create()
-                                .text("Move Up")
-                                .onAction(
-                                        new EventHandler<ActionEvent>() {
-                                            @Override
-                                            public void handle(ActionEvent arg0) {
-                                            }
-                                        }
-                                ).disable(true)
-                                .build(),
-                        MenuItemBuilder.create()
-                                .text("Move Down")
-                                .onAction(
-                                        new EventHandler<ActionEvent>() {
-                                            @Override
-                                            public void handle(ActionEvent arg0) {
-                                            }
-                                        }
-                                ).disable(true)
-                                .build(),
-
-                        MenuItemBuilder.create()
-                                .text("Delete")
-                                .onAction(
-                                        new EventHandler<ActionEvent>() {
-                                            @Override
-                                            public void handle(ActionEvent arg0) {
-
-                                                TreeItem<Object> objectTreeItem = mainGUIController.getSeletedItem();
-                                                ((QuestionMultiChoice)objectTreeItem.getParent().getValue()).getChoices().remove((Choice) objectTreeItem.getValue());
-                                                boolean remove = objectTreeItem.getParent().getChildren().remove(objectTreeItem);
-
-
-                                            }
-                                        }
-                                )
-                                .build()
-                        // other menu item
-
-
-                )
-                .build();
-
-        collectionMenu = ContextMenuBuilder.create()
-                .items(
-                        MenuItemBuilder.create()
-                                .text("Add Exam")
-                                .onAction(
-                                        new EventHandler<ActionEvent>() {
-                                            @Override
-                                            public void handle(ActionEvent arg0) {
-                                                Helper.totalExams = ((RootObject)mainGUIController.getSeletedItem().getValue()).getExams().size()-1;
-
-//                                                System.out.println(Helper.totalExams);
-                                                Exam exam = new Exam();
-                                                ((RootObject)mainGUIController.getSeletedItem().getValue()).getExams().add(exam);
-                                                mainGUIController.makeBranch(new Exam(), mainGUIController.getSeletedItem());
-                                            }
-                                        }
-                                )
-                                .build(),
-
-                        MenuItemBuilder.create()
-                                .text("Delete")
-                                .onAction(
-                                        new EventHandler<ActionEvent>() {
-                                            @Override
-                                            public void handle(ActionEvent arg0) {
-                                            }
-                                        }
-                                )
-                                .disable(true)
-                                .build()
-                        // other menu item
-
-
-                )
-                .build();
-
-        questionMenu = ContextMenuBuilder.create()
-                .items(
-                        MenuItemBuilder.create()
-                                .text("Add Choice")
-                                .onAction(
-                                        new EventHandler<ActionEvent>() {
-                                            @Override
-                                            public void handle(ActionEvent arg0) {
-
-                                                Helper.totalChoices = ((QuestionMultiChoice)mainGUIController.getSeletedItem().getValue()).getChoices().size()-1;
-
-                                                Choice choice = new Choice();
-                                                ((QuestionMultiChoice)mainGUIController.getSeletedItem().getValue()).getChoices().add(choice);
-                                                mainGUIController.makeBranch(new Choice(), mainGUIController.getSeletedItem());
-                                            }
-                                        }
-                                )
-                                .build(),
-                        MenuItemBuilder.create()
-                                .text("Move Up")
-                                .onAction(
-                                        new EventHandler<ActionEvent>() {
-                                            @Override
-                                            public void handle(ActionEvent arg0) {
-                                            }
-                                        }
-                                ).disable(true)
-                                .build(),
-                        MenuItemBuilder.create()
-                                .text("Move Down")
-                                .onAction(
-                                        new EventHandler<ActionEvent>() {
-                                            @Override
-                                            public void handle(ActionEvent arg0) {
-                                            }
-                                        }
-                                ).disable(true)
-                                .build(),
-                        MenuItemBuilder.create()
-                                .text("Properties")
-                                .onAction(
-                                        new EventHandler<ActionEvent>() {
-                                            @Override
-                                            public void handle(ActionEvent arg0) {
-                                            }
-
-                                        }
-                                )
-                                .build(),
-
                         MenuItemBuilder.create()
                                 .text("Delete")
                                 .onAction(
@@ -251,14 +64,35 @@ public class MyTreeCell extends TextFieldTreeCell<Object> {
                                             @Override
                                             public void handle(ActionEvent arg0) {
                                                 TreeItem<Object> objectTreeItem = mainGUIController.getSeletedItem();
-                                               ((Exam)objectTreeItem.getParent().getValue()).getQuestions().remove((Question)objectTreeItem.getValue());
+                                                ((SubCorpus)objectTreeItem.getParent().getValue()).getLines().remove((Line) objectTreeItem.getValue());
                                                 boolean remove = objectTreeItem.getParent().getChildren().remove(objectTreeItem);
                                             }
                                         }
                                 )
-                                .build()
+                                .build(),
                         // other menu item
+                        MenuItemBuilder.create()
+                                .text("Add Line Below")
+                                .onAction(
+                                        new EventHandler<ActionEvent>() {
+                                            @Override
+                                            public void handle(ActionEvent arg0) {
 
+                                                try {
+                                                    Line line = new Line();
+                                                    ((SubCorpus)mainGUIController.getSeletedItem().getParent().getValue()).getLines().add(line);
+                                                    TreeItem<Object> node = mainGUIController.makeBranch(line, mainGUIController.getSeletedItem().getParent());
+                                                    int row = mainGUIController.treeCon.getRow(node);
+                                                    mainGUIController.treeCon.getSelectionModel().select(row);
+                                                    mainGUIController.treeCon.scrollTo(row);
+
+                                                }catch (Exception e){
+
+                                                }
+                                            }
+                                        }
+                                )
+                                .build()
 
                 )
                 .build();
@@ -276,29 +110,34 @@ public class MyTreeCell extends TextFieldTreeCell<Object> {
 //        }
 
         if(!empty && item instanceof RootObject){
-            setContextMenu(collectionMenu);
+            setContextMenu(null);
             return;
         }
 
-        if(!empty && item instanceof Exam){
-            setContextMenu(examMenu);
-            return;
-        }
+//        if(!empty && item instanceof Exam){
+//            setContextMenu(examMenu);
+//            return;
+//        }
 
         if(!empty && item instanceof SubCorpus){
             setContextMenu(corpusMenu);
             return;
         }
+//
+//        if(!empty && item instanceof Question){
+//            setContextMenu(questionMenu);
+//            return;
+//        }
 
-        if(!empty && item instanceof Question){
-            setContextMenu(questionMenu);
+        if(!empty && item instanceof Line){
+            setContextMenu(lineMenu);
             return;
         }
 
-        if(!empty && item instanceof Choice){
-            setContextMenu(choiceMenu);
-            return;
-        }
+//        if(!empty && item instanceof Choice){
+//            setContextMenu(choiceMenu);
+//            return;
+//        }
 //        setContextMenu(questionMenu);
     }
 }

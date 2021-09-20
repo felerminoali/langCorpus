@@ -1,43 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
 <AnchorPane prefHeight="400.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.mz.osoma.editor.controlador.RootPaneController">
    <children>
-      <GridPane layoutX="83.0" layoutY="99.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="80.0">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="284.0" minWidth="10.0" prefWidth="129.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="480.0" minWidth="10.0" prefWidth="451.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
+      <VBox layoutX="20.0" layoutY="80.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="80.0">
          <children>
-            <Label text="Title" />
-            <Label text="Number" GridPane.rowIndex="1" />
-            <Label text="File Version" GridPane.rowIndex="2" />
-            <Label text="Passin Score" GridPane.rowIndex="3" />
-            <Label text="Time limit (minutes)" GridPane.rowIndex="4" />
-            <TextField fx:id="txtTitle" GridPane.columnIndex="1" />
-            <TextField fx:id="txtNumber" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <TextField fx:id="txtFileVer" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <TextField fx:id="txtPassScore" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <TextField fx:id="txtTimeLimite" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <GridPane>
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="284.0" minWidth="10.0" prefWidth="129.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="480.0" minWidth="10.0" prefWidth="451.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label text="Author" />
+                  <Label text="File Version" GridPane.rowIndex="1" />
+                  <TextField fx:id="txtTitle" GridPane.columnIndex="1" />
+                  <TextField fx:id="txtFileVer" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+               </children>
+            </GridPane>
          </children>
-      </GridPane>
-      <Label layoutX="14.0" layoutY="14.0" prefHeight="45.0" prefWidth="450.0" text="On this page you can set the main properties and the description for the exam.  The exam description" />
-      <CheckBox layoutX="20.0" layoutY="239.0" mnemonicParsing="false" text="Show Description Before Exam" />
-      <TextArea layoutX="10.0" layoutY="271.0" prefHeight="115.0" prefWidth="571.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" />
+      </VBox>
    </children>
 </AnchorPane>

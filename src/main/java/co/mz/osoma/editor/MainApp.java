@@ -21,16 +21,10 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-//        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-//        primaryStage.setDescription("Hello World");
-//        primaryStage.setScene(new Scene(root));
-//        primaryStage.show();
-
         this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("Exames");
+        this.primaryStage.setTitle("Corpus Creator");
 
         initRootLayout();
-
         showExams();
     }
 

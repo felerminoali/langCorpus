@@ -1,8 +1,6 @@
 package co.mz.osoma.editor.spelling;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 public class DictionaryLoader {
 
@@ -17,6 +15,7 @@ public class DictionaryLoader {
         BufferedReader reader = null;
         try {
             String nextWord;
+//            reader = new BufferedReader(new FileReader(filename));
             reader = new BufferedReader(new FileReader(filename));
             while ((nextWord = reader.readLine()) != null) {
                 d.addWord(nextWord);
@@ -27,6 +26,25 @@ public class DictionaryLoader {
         }
         
     }
+
+    public static void loadDictionary(Dictionary d, InputStream file)
+    {
+        // Dictionary files have 1 word per line
+        BufferedReader reader = null;
+        try {
+            String nextWord;
+//            reader = new BufferedReader(new FileReader(filename));
+            reader = new BufferedReader(new InputStreamReader(file, "UTF-8"));
+            while ((nextWord = reader.readLine()) != null) {
+                d.addWord(nextWord);
+            }
+        } catch (IOException e) {
+            System.err.println("Problem loading dictionary file: " + file.toString());
+            e.printStackTrace();
+        }
+
+    }
+
     
     /** Load the first N words from the dictionary file into the dictionary
      * 

@@ -8,7 +8,7 @@ import javafx.collections.ObservableList;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RootObject implements NodeObject{
+public class RootObject implements NodeObject {
 
     private StringProperty title = new SimpleStringProperty();;
     private StringProperty number = new SimpleStringProperty();;

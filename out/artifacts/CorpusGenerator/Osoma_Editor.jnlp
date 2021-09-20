@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="Osoma_Editor.jnlp">
+  <information>
+    <title>CorpusGenerator</title>
+    <vendor>Unknown</vendor>
+    <description>CorpusGenerator</description>
+    <offline-allowed/>
+  </information>
+  <resources>
+    <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+    <jar href="Osoma_Editor.jar" size="3460538" download="eager" />
+    <jar href="flowless-0.4.5.jar" size="55773" download="eager" />
+    <jar href="jackson-annotations-2.10.3.jar" size="68079" download="eager" />
+    <jar href="jackson-core-2.10.3.jar" size="349108" download="eager" />
+    <jar href="jackson-databind-2.10.3.jar" size="1404171" download="eager" />
+    <jar href="jsoup-1.12.1.jar" size="397115" download="eager" />
+    <jar href="reactfx-2.0-M4u1.jar" size="407140" download="eager" />
+    <jar href="richtextfx-0.6.10.jar" size="150088" download="eager" />
+    <jar href="undofx-1.2.jar" size="21145" download="eager" />
+    <jar href="wellbehavedfx-0.1.1.jar" size="43039" download="eager" />
+  </resources>
+  <jfx:javafx-desc  width="600" height="400" main-class="co.mz.osoma.editor.MainApp"  name="CorpusGenerator" />
+  <update check="background"/>
+</jnlp>

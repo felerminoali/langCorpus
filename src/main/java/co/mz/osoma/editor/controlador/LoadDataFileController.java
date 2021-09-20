@@ -5,6 +5,7 @@ import co.mz.osoma.editor.modelo.RootCorpus;
 import co.mz.osoma.editor.modelo.RootObject;
 import co.mz.osoma.editor.modelo.SubCorpus;
 import co.mz.osoma.editor.service.AutoSpellingTextArea;
+import co.mz.osoma.editor.service.Helper;
 import co.mz.osoma.editor.service.ReadFileTask;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -111,6 +112,7 @@ public class LoadDataFileController {
 //            fc.setInitialDirectory(lastFile.getParentFile());
 //        }
         fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT", "*.txt"));
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Other", "*.*"));
     }
 
 
@@ -142,19 +144,8 @@ public class LoadDataFileController {
 
 
     private void readFile(List<String> fileOrigin, List<String> fileTarget) {
-
-        if (fileOrigin.size() == fileTarget.size()) {
-
-//            ReadFileTask task = new ReadFileTask(fileOrigin, fileTarget);
-//            mainGUIController.progBar.progressProperty().bind(task.progressProperty());
-//            task.valueProperty().addListener((w, o, n) -> {
-//                mainGUIController.populateTree((RootCorpus) n);
-//            });
-//            new Thread(task).start();
-//
-
             ObservableList<Line> lines = FXCollections.observableArrayList();
-
+            Helper.resetTotals();
             for (int i = 0; i < fileOrigin.size(); i++) {
                 Line line = new Line();
                 line.setOriginSentence(fileOrigin.get(i));
@@ -163,19 +154,10 @@ public class LoadDataFileController {
             }
 
             SubCorpus subCorpus = new SubCorpus(lines);
-
             ObservableList<SubCorpus> corpuses = FXCollections.observableArrayList();
-
             corpuses.add(subCorpus);
             RootCorpus rootCorpus = new RootCorpus(corpuses);
             mainGUIController.populateTree(rootCorpus);
-        } else {
-
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText("File have different sizes");
-            alert.show();
-        }
-
     }
 
     private void appendTextAndClose() {
